@@ -8,17 +8,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows;
+
+using WpfTetris.Models;
 
 namespace WpfTetris
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        private GameBoard board;
+
         public MainWindow()
         {
             InitializeComponent();
+            board = new GameBoard();
+            BoardGrid.ItemsSource = board.Cells;
         }
     }
 }
