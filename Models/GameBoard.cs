@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 
 namespace WpfTetris.Models
 {
@@ -18,6 +19,17 @@ namespace WpfTetris.Models
             {
                 Cells.Add(new Cell()); // пустые клетки
             }
+        }
+
+        public void ShowUnit(Unit u)
+        {
+            // очищаем поле
+            foreach(var cell in Cells)
+                cell.Color = Brushes.Black;
+
+            // показываем unit
+            int index = u.Row * Columns + u.Col;
+            Cells[index].Color = Brushes.Red;
         }
     }
 }
