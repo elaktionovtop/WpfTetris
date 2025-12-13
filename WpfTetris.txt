@@ -45,3 +45,10 @@ MainWindow - обработка нажатий клавиш
 фокус на окно
 метод перемещения
 !!! git управление перемещением Unit
+
+Cell - добавляем флаг IsFilled
+GameBoard - IsFree, FixUnit
+MainWindow - CanMoveDown, обработка остановки
+    Timer_Tick - обработка остановки
+GameBoard - ShowUnit
+!!! git следующий Unit

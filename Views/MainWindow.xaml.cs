@@ -43,14 +43,17 @@ namespace WpfTetris
             }
             else
             {
-                // пока просто останавливаемся
-                timer.Stop();
+                board.FixUnit(unit);
+                CreateUnit();
             }
         }
 
         private bool CanMoveDown()
         {
-            return unit.Row < GameBoard.Rows - 1;
+            int nextRow = unit.Row + 1;
+            if(nextRow >= GameBoard.Rows) return false;
+
+            return board.IsFree(nextRow, unit.Col);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

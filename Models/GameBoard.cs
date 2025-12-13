@@ -25,10 +25,23 @@ namespace WpfTetris.Models
         {
             // очищаем поле
             foreach(var cell in Cells)
-                cell.Color = Brushes.Black;
+                if (!cell.IsFilled)
+                    cell.Color = Brushes.Black;
 
             // показываем unit
             int index = u.Row * Columns + u.Col;
+            Cells[index].Color = Brushes.Red;
+        }
+
+        public bool IsFree(int row, int col)
+        {
+            return !Cells[row * Columns + col].IsFilled;
+        }
+
+        public void FixUnit(Unit u)
+        {
+            int index = u.Row * Columns + u.Col;
+            Cells[index].IsFilled = true;
             Cells[index].Color = Brushes.Red;
         }
     }
