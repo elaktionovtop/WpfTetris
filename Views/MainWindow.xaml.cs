@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 using WpfTetris.Models;
@@ -50,6 +51,38 @@ namespace WpfTetris
         private bool CanMoveDown()
         {
             return unit.Row < GameBoard.Rows - 1;
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch(e.Key)
+            {
+                case Key.Left:
+                    TryMove(0, -1);
+                    break;
+
+                case Key.Right:
+                    TryMove(0, 1);
+                    break;
+
+                case Key.Down:
+                    TryMove(1, 0);
+                    break;
+            }
+        }
+
+        private void TryMove(int dRow, int dCol)
+        {
+            int newRow = unit.Row + dRow;
+            int newCol = unit.Col + dCol;
+
+            if(newRow < 0 || newRow >= GameBoard.Rows) return;
+            if(newCol < 0 || newCol >= GameBoard.Columns) return;
+
+            unit.Row = newRow;
+            unit.Col = newCol;
+
+            board.ShowUnit(unit);
         }
     }
 }
