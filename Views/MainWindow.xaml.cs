@@ -30,8 +30,23 @@ namespace WpfTetris
 
         private void CreateUnit()
         {
-            unit = new Unit(0, GameBoard.Columns / 2);
+            int startRow = 0;
+            int startCol = GameBoard.Columns / 2;
+
+            if(!board.IsFree(startRow, startCol))
+            {
+                GameOver();
+                return;
+            }
+
+            unit = new Unit(startRow, startCol);
             board.ShowUnit(unit);
+        }
+
+        private void GameOver()
+        {
+            timer.Stop();
+            MessageBox.Show("Game Over");
         }
 
         private void Timer_Tick(object? sender, EventArgs e)
@@ -70,8 +85,11 @@ namespace WpfTetris
                     break;
 
                 case Key.Down:
-                    TryMove(1, 0);
-                    break;
+                    while(CanMoveDown())
+                    {
+                        unit.Row++;
+                    }
+                    board.ShowUnit(unit); break;
             }
         }
 
