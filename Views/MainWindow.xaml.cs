@@ -44,6 +44,7 @@ namespace WpfTetris
             else
             {
                 board.FixUnit(unit);
+                board.CheckAndRemoveFullRows();
                 CreateUnit();
             }
         }

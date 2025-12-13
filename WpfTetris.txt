@@ -52,3 +52,6 @@ MainWindow - CanMoveDown, обработка остановки
     Timer_Tick - обработка остановки
 GameBoard - ShowUnit
 !!! git следующий Unit
+
+GameBoard - CheckFullRows, RemoveRow, CheckAndRemoveFullRows
+MainWindow - Timer_Tick - вызов проверки рядов
