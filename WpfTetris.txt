@@ -62,3 +62,7 @@ GameBoard - стрелка вниз
     GameOver
 !!! git конец игры
 
+изменение разметки MainWindow.xaml
+GameBoard - поле и подсчет очков
+MainWindow - обработка паузы и перезапуска
+!!! git интерфейс пользователя

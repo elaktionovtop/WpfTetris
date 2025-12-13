@@ -1,18 +1,25 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Collections.ObjectModel;
+using System.Text;
+using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace WpfTetris.Models
 {
-    public class GameBoard
+    public partial class GameBoard : ObservableObject
     {
         public const int Columns = 10;
         public const int Rows = 20;
 
         public ObservableCollection<Cell> Cells { get; } = new ObservableCollection<Cell>();
 
+        [ObservableProperty]
+        private int _score;
+        
         public GameBoard()
         {
             for(int i = 0; i < Columns * Rows; i++)
@@ -52,6 +59,7 @@ namespace WpfTetris.Models
                 if(IsRowFull(row))
                 {
                     RemoveRow(row);
+                    Score += Columns;
                     row++; // перепроверяем эту же строку
                 }
             }
@@ -86,6 +94,16 @@ namespace WpfTetris.Models
                 Cells[c].IsFilled = false;
                 Cells[c].Color = Brushes.Black;
             }
+        }
+
+        public void Clear()
+        {
+            foreach(var cell in Cells)
+            {
+                cell.IsFilled = false;
+                cell.Color = Brushes.Black;
+            }
+            Score = 0;
         }
     }
 }

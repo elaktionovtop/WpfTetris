@@ -18,7 +18,8 @@ namespace WpfTetris
             InitializeComponent();
 
             board = new GameBoard();
-            BoardGrid.ItemsSource = board.Cells;
+            DataContext = board;
+            //BoardGrid.ItemsSource = board.Cells;
 
             CreateUnit();
 
@@ -105,6 +106,30 @@ namespace WpfTetris
             unit.Col = newCol;
 
             board.ShowUnit(unit);
+        }
+
+        private bool isPaused = false;
+
+        private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+            if(isPaused)
+            {
+                timer.Start();
+                isPaused = false;
+            }
+            else
+            {
+                timer.Stop();
+                isPaused = true;
+            }
+        }
+
+        private void NewGame_Click(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
+            board.Clear();
+            CreateUnit();
+            timer.Start();
         }
     }
 }
