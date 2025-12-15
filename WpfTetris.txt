@@ -66,3 +66,10 @@ GameBoard - стрелка вниз
 GameBoard - поле и подсчет очков
 MainWindow - обработка паузы и перезапуска
 !!! git интерфейс пользователя
+
+Figure - конструктор, Move
+GameBoard - CreateFigure, readonly Columns
+    CanPlace, ShowFigure, FixFigure
+MainWindow - currentFigure, Timer_Tick
+    TryMove, Window_KeyDown
+!!! git создание фигуры

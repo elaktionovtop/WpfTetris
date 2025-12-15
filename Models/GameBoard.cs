@@ -12,8 +12,8 @@ namespace WpfTetris.Models
 {
     public partial class GameBoard : ObservableObject
     {
-        public const int Columns = 10;
-        public const int Rows = 20;
+        public readonly int Columns = 10;
+        public readonly int Rows = 20;
 
         public ObservableCollection<Cell> Cells { get; } = new ObservableCollection<Cell>();
 
@@ -28,16 +28,39 @@ namespace WpfTetris.Models
             }
         }
 
-        public void ShowUnit(Unit u)
+        //public void ShowUnit(Unit u)
+        //{
+        //    // очищаем поле
+        //    foreach(var cell in Cells)
+        //        if (!cell.IsFilled)
+        //            cell.Color = Brushes.Black;
+
+        //    // показываем unit
+        //    int index = u.Row * Columns + u.Col;
+        //    Cells[index].Color = Brushes.Red;
+        //}
+
+        public bool CanPlace(IEnumerable<(int Row, int Col)> cells)
         {
-            // очищаем поле
+            foreach(var (row, col) in cells)
+            {
+                if(row < 0 || row >= Rows || col < 0 || col >= Columns)
+                    return false;
+
+                if(Cells[row * Columns + col].IsFilled)
+                    return false;
+            }
+            return true;
+        }
+        
+        public void ShowFigure(Figure figure)
+        {
             foreach(var cell in Cells)
-                if (!cell.IsFilled)
+                if(!cell.IsFilled)
                     cell.Color = Brushes.Black;
 
-            // показываем unit
-            int index = u.Row * Columns + u.Col;
-            Cells[index].Color = Brushes.Red;
+            foreach(var (row, col) in figure.Cells)
+                Cells[row * Columns + col].Color = figure.Color;
         }
 
         public bool IsFree(int row, int col)
@@ -45,12 +68,21 @@ namespace WpfTetris.Models
             return !Cells[row * Columns + col].IsFilled;
         }
 
-        public void FixUnit(Unit u)
+        public void FixFigure(Figure figure)
         {
-            int index = u.Row * Columns + u.Col;
-            Cells[index].IsFilled = true;
-            Cells[index].Color = Brushes.Red;
+            foreach(var (row, col) in figure.Cells)
+            {
+                Cells[row * Columns + col].IsFilled = true;
+                Cells[row * Columns + col].Color = figure.Color;
+            }
         }
+        
+        //public void FixUnit(Unit u)
+        //{
+        //    int index = u.Row * Columns + u.Col;
+        //    Cells[index].IsFilled = true;
+        //    Cells[index].Color = Brushes.Red;
+        //}
 
         public void CheckAndRemoveFullRows()
         {
