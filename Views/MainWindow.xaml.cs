@@ -14,6 +14,8 @@ namespace WpfTetris
 
         private DispatcherTimer timer;
 
+        bool _isGameOver = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -46,15 +48,27 @@ namespace WpfTetris
         //    board.ShowUnit(unit);
         //}
 
-        void CreateFigure()
+        //void CreateFigure()
+        //{
+        //    currentFigure = new Figure(0, board.Columns / 2 - 1);
+        //    board.ShowFigure(currentFigure);
+        //}
+
+        bool CreateFigure()
         {
             currentFigure = new Figure(0, board.Columns / 2 - 1);
+
+            if(!board.CanPlace(currentFigure.Cells))
+                return false;
+
             board.ShowFigure(currentFigure);
+            return true;
         }
 
         private void GameOver()
         {
             timer.Stop();
+            _isGameOver = true;
             MessageBox.Show("Game Over");
         }
 
@@ -86,7 +100,11 @@ namespace WpfTetris
             {
                 board.FixFigure(currentFigure);
                 board.CheckAndRemoveFullRows();
-                CreateFigure();
+                //CreateFigure();
+                if(!CreateFigure())
+                {
+                    GameOver();
+                }
             }
 
             board.ShowFigure(currentFigure);

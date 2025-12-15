@@ -73,3 +73,8 @@ GameBoard - CreateFigure, readonly Columns
 MainWindow - currentFigure, Timer_Tick
     TryMove, Window_KeyDown
 !!! git создание фигуры
+
+MainWindow - проверка завершения игры
+isGameOver, CreateFigure, Timer_Tick, 
+KeyDown,GameOver
+фиксация размеров и положения окна
