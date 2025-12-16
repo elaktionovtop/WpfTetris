@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 using WpfTetris.Models;
@@ -9,7 +10,6 @@ namespace WpfTetris
     public partial class MainWindow : Window
     {
         private GameBoard board;
-        //private Unit unit;
         private Figure currentFigure;
 
         private DispatcherTimer timer;
@@ -22,10 +22,8 @@ namespace WpfTetris
 
             board = new GameBoard();
             DataContext = board;
-            //BoardGrid.ItemsSource = board.Cells;
 
-            //CreateUnit();
-            CreateFigure();
+            currentFigure = CreateFigure();
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
@@ -33,36 +31,69 @@ namespace WpfTetris
             timer.Start();
         }
 
-        //private void CreateUnit()
-        //{
-        //    int startRow = 0;
-        //    int startCol = GameBoard.Columns / 2;
-
-        //    if(!board.IsFree(startRow, startCol))
-        //    {
-        //        GameOver();
-        //        return;
-        //    }
-
-        //    unit = new Unit(startRow, startCol);
-        //    board.ShowUnit(unit);
-        //}
-
-        //void CreateFigure()
+        //bool CreateFigure()
         //{
         //    currentFigure = new Figure(0, board.Columns / 2 - 1);
+
+        //    if(!board.CanPlace(currentFigure.Cells))
+        //        return false;
+
         //    board.ShowFigure(currentFigure);
+        //    return true;
         //}
 
-        bool CreateFigure()
+        Figure CreateSquare()
         {
-            currentFigure = new Figure(0, board.Columns / 2 - 1);
+            int c = board.Columns / 2 - 1;
+            return new Figure(
+                new[]
+                {
+            (0, c),
+            (0, c + 1),
+            (1, c),
+            (1, c + 1)
+                },
+                Brushes.Blue
+            );
+        }
 
-            if(!board.CanPlace(currentFigure.Cells))
-                return false;
+        Figure CreateLine()
+        {
+            int c = board.Columns / 2;
+            return new Figure(
+                new[]
+                {
+            (0, c),
+            (1, c),
+            (2, c),
+            (3, c)
+                },
+                Brushes.Cyan
+            );
+        }
 
+        Figure CreateFigure()
+        {
+            Figure fig = Random.Shared.Next(2) == 0
+                ? CreateSquare()
+                : CreateLine();
+
+            if(!board.CanPlace(fig.Cells))
+                return null;
+
+            board.ShowFigure(fig);
+            return fig;
+        }
+
+        void TryRotate()
+        {
+            var rotated = currentFigure.GetRotated();
+
+            if(!board.CanPlace(rotated))
+                return;
+
+            currentFigure.ApplyRotation(rotated);
             board.ShowFigure(currentFigure);
-            return true;
         }
 
         private void GameOver()
@@ -71,21 +102,6 @@ namespace WpfTetris
             _isGameOver = true;
             MessageBox.Show("Game Over");
         }
-
-        //private void Timer_Tick(object? sender, EventArgs e)
-        //{
-        //    if(CanMoveDown())
-        //    {
-        //        unit.Row++;
-        //        board.ShowUnit(unit);
-        //    }
-        //    else
-        //    {
-        //        board.FixUnit(unit);
-        //        board.CheckAndRemoveFullRows();
-        //        CreateUnit();
-        //    }
-        //}
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -100,8 +116,8 @@ namespace WpfTetris
             {
                 board.FixFigure(currentFigure);
                 board.CheckAndRemoveFullRows();
-                //CreateFigure();
-                if(!CreateFigure())
+                currentFigure = CreateFigure();
+                if(currentFigure == null)
                 {
                     GameOver();
                 }
@@ -110,70 +126,17 @@ namespace WpfTetris
             board.ShowFigure(currentFigure);
         }
 
-
-        //private bool CanMoveDown()
-        //{
-        //    int nextRow = unit.Row + 1;
-        //    if(nextRow >= GameBoard.Rows) return false;
-
-        //    return board.IsFree(nextRow, unit.Col);
-        //}
-
-        //private void Window_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    switch(e.Key)
-        //    {
-        //        case Key.Left:
-        //            TryMove(0, -1);
-        //            break;
-
-        //        case Key.Right:
-        //            TryMove(0, 1);
-        //            break;
-
-        //        case Key.Down:
-        //            while(CanMoveDown())
-        //            {
-        //                unit.Row++;
-        //            }
-        //            board.ShowUnit(unit); break;
-        //    }
-        //}
-
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            if(e.Key == Key.Up)
+                TryRotate();
+
             if(e.Key == Key.Left) TryMove(0, -1);
             if(e.Key == Key.Right) TryMove(0, 1);
             if(e.Key == Key.Down) 
                 while(TryMove(1, 0));
         }
         
-        //private void TryMove(int dRow, int dCol)
-        //{
-        //    int newRow = unit.Row + dRow;
-        //    int newCol = unit.Col + dCol;
-
-        //    if(newRow < 0 || newRow >= GameBoard.Rows) return;
-        //    if(newCol < 0 || newCol >= GameBoard.Columns) return;
-
-        //    unit.Row = newRow;
-        //    unit.Col = newCol;
-
-        //    board.ShowUnit(unit);
-        //}
-
-        //void TryMove(int dRow, int dCol)
-        //{
-        //    var next = currentFigure.Cells
-        //        .Select(c => (c.Row + dRow, c.Col + dCol));
-
-        //    if(!board.CanPlace(next))
-        //        return;
-
-        //    currentFigure.Move(dRow, dCol);
-        //    board.ShowFigure(currentFigure);
-        //}
-
         bool TryMove(int dRow, int dCol)
         {
             var next = currentFigure.Cells
@@ -207,7 +170,6 @@ namespace WpfTetris
         {
             timer.Stop();
             board.Clear();
-            //CreateUnit();
             CreateFigure();
             timer.Start();
         }

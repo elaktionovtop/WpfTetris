@@ -72,9 +72,17 @@ GameBoard - CreateFigure, readonly Columns
     CanPlace, ShowFigure, FixFigure
 MainWindow - currentFigure, Timer_Tick
     TryMove, Window_KeyDown
-!!! git создание фигуры
+!!! git фигура 2х2
 
 MainWindow - проверка завершения игры
 isGameOver, CreateFigure, Timer_Tick, 
 KeyDown,GameOver
 фиксация размеров и положения окна
+!!! git завершение игры
+
+Figure - List set, конструктор
+GetRotated, ApplyRotation
+MainWindow - CreateFigure, Line, Square,
+TryRotate, Timer_Tick
+
+зачем yield return?
