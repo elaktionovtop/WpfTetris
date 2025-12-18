@@ -84,5 +84,7 @@ Figure - List set, конструктор
 GetRotated, ApplyRotation
 MainWindow - CreateFigure, Line, Square,
 TryRotate, Timer_Tick
+!!! git две фигуры с поворотом
 
-зачем yield return?
+Main - создание разных фигур
+!!! git все фигуры

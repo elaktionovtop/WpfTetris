@@ -42,48 +42,98 @@ namespace WpfTetris
         //    return true;
         //}
 
-        Figure CreateSquare()
-        {
-            int c = board.Columns / 2 - 1;
-            return new Figure(
-                new[]
-                {
-            (0, c),
-            (0, c + 1),
-            (1, c),
-            (1, c + 1)
-                },
-                Brushes.Blue
-            );
-        }
+        //Figure CreateSquare()
+        //{
+        //    int c = board.Columns / 2 - 1;
+        //    return new Figure(
+        //        new[]
+        //        {
+        //    (0, c),
+        //    (0, c + 1),
+        //    (1, c),
+        //    (1, c + 1)
+        //        },
+        //        Brushes.Blue
+        //    );
+        //}
 
-        Figure CreateLine()
-        {
-            int c = board.Columns / 2;
-            return new Figure(
-                new[]
-                {
-            (0, c),
-            (1, c),
-            (2, c),
-            (3, c)
-                },
-                Brushes.Cyan
-            );
-        }
+        //Figure CreateLine()
+        //{
+        //    int c = board.Columns / 2;
+        //    return new Figure(
+        //        new[]
+        //        {
+        //    (0, c),
+        //    (1, c),
+        //    (2, c),
+        //    (3, c)
+        //        },
+        //        Brushes.Cyan
+        //    );
+        //}
+
+        //Figure CreateFigure()
+        //{
+        //    Figure fig = Random.Shared.Next(2) == 0
+        //        ? CreateSquare()
+        //        : CreateLine();
+
+        //    if(!board.CanPlace(fig.Cells))
+        //        return null;
+
+        //    board.ShowFigure(fig);
+        //    return fig;
+        //}
 
         Figure CreateFigure()
         {
-            Figure fig = Random.Shared.Next(2) == 0
-                ? CreateSquare()
-                : CreateLine();
-
+            int shapeIndex = Random.Shared.Next(FigureShapes.Length);
+            var shape = FigureShapes[shapeIndex];
+            int c = board.Columns / 2 - 2; // центрируем фигуру
+            var cells = shape
+                .Select(offset => (offset.r, offset.c + c))
+                .ToArray();
+            Brush color = shapeIndex switch
+            {
+                0 => Brushes.Yellow, // O
+                1 => Brushes.Cyan,   // I
+                2 => Brushes.Purple, // T
+                3 => Brushes.Orange, // L
+                4 => Brushes.Blue,   // J
+                5 => Brushes.Green,  // S
+                6 => Brushes.Red,    // Z
+                _ => Brushes.White
+            };
+            var fig = new Figure(cells, color);
             if(!board.CanPlace(fig.Cells))
                 return null;
-
             board.ShowFigure(fig);
             return fig;
         }
+
+        static readonly (int r, int c)[][] FigureShapes =
+        {
+            // O (квадрат)
+            new[] { (0,0), (0,1), (1,0), (1,1) },
+
+            // I (линия)
+            new[] { (0,0), (1,0), (2,0), (3,0) },
+
+            // T
+            new[] { (0,1), (1,0), (1,1), (1,2) },
+
+            // L
+            new[] { (0,0), (1,0), (2,0), (2,1) },
+
+            // J
+            new[] { (0,1), (1,1), (2,1), (2,0) },
+
+            // S
+            new[] { (0,1), (0,2), (1,0), (1,1) },
+
+            // Z
+            new[] { (0,0), (0,1), (1,1), (1,2) }
+        };
 
         void TryRotate()
         {
